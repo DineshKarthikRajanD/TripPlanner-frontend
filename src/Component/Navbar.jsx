@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { IoMenu } from "react-icons/io5";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -12,6 +13,7 @@ const Navbar = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [allPlaces, setAllPlaces] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -19,9 +21,8 @@ const Navbar = () => {
     const handleStorageChange = () => {
       const token = localStorage.getItem("authToken");
       setIsLoggedIn(!!token);
-      setUsername(localStorage.getItem("username") || "");
-      setEmail(localStorage.getItem("email") || "");
       setUsername(localStorage.getItem("name") || "");
+      setEmail(localStorage.getItem("email") || "");
     };
 
     window.addEventListener("storage", handleStorageChange);
@@ -30,7 +31,6 @@ const Navbar = () => {
     };
   }, []);
 
-  // Fetch all places once on load
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
@@ -67,7 +67,6 @@ const Navbar = () => {
       return;
     }
 
-    // Filter places where the name starts with the input value
     const filteredResults = allPlaces.filter((place) =>
       place.name.toLowerCase().startsWith(value.toLowerCase())
     );
@@ -78,19 +77,12 @@ const Navbar = () => {
   const handlePlaceSelect = (place) => {
     setSearchQuery(place.name);
     setSearchResults([]);
-    navigate(`/packages/${place.name}`);
-  };
-
-  const handleSearchSubmit = () => {
-    if (searchQuery) {
-      navigate(`/packages/${searchQuery}`);
-      setSearchQuery("");
-    }
+    navigate(`/${place.name}`);
+    setIsMenuOpen(false);
   };
 
   const toggleDropdown = () => setShowDropdown((prev) => !prev);
 
-  // Voice search handler
   const handleSpeechSearch = () => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -112,15 +104,33 @@ const Navbar = () => {
 
       if (detectedLocation) {
         setSearchQuery(detectedLocation);
-        handlePlaceSelect({ name: detectedLocation }); // Selects the place based on detected location
+        handlePlaceSelect({ name: detectedLocation });
       } else {
         setSearchQuery(transcript);
-        handleSearchChange({ target: { value: transcript } }); // Regular search if location not recognized
+        handleSearchChange({ target: { value: transcript } });
       }
     };
 
     recognition.start();
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const menu = document.getElementById("mobile-menu");
+      if (
+        menu &&
+        !menu.contains(event.target) &&
+        !event.target.closest(".hamburger-icon")
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div>
@@ -129,11 +139,22 @@ const Navbar = () => {
           <img
             src="https://img.freepik.com/free-vector/detailed-travel-logo_23-2148616611.jpg"
             alt=""
-            className="h-14 w-14 rounded-full ml-16"
+            className="h-14 w-14 rounded-full md:ml-16"
           />
-          <h1 className="ml-4 text-3xl font-bold">Travigo</h1>
+          <h1 className="md:ml-4 text-3xl font-bold">Travigo</h1>
         </div>
-        <div className="flex items-center">
+
+        <div className="lg:hidden flex items-center">
+          <button
+            className="hamburger-icon text-3xl"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            aria-label="Toggle menu"
+          >
+            <IoMenu />
+          </button>
+        </div>
+
+        <div className="hidden lg:flex items-center gap-5">
           <ul className="flex gap-5 font-medium mt-3">
             <li>
               <Link to="/">Home</Link>
@@ -159,7 +180,9 @@ const Navbar = () => {
                 className="border border-gray-300 rounded p-2 ml-5"
               />
               <button
-                onClick={handleSearchSubmit}
+                onClick={() =>
+                  handleSearchChange({ target: { value: searchQuery } })
+                }
                 className="ml-2 bg-teal-600 text-white rounded p-2"
                 disabled={!searchQuery}
               >
@@ -178,7 +201,7 @@ const Navbar = () => {
         </div>
 
         <div>
-          <ul className="flex gap-5 mr-14 font-medium">
+          <ul className="flex gap-5 mr-1 font-medium">
             {isLoggedIn ? (
               <>
                 <h5 className="mt-4">{username}</h5>
@@ -192,12 +215,12 @@ const Navbar = () => {
                   </button>
                   {showDropdown && (
                     <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
-                      <div className="block px-4 py-2 text-gray-600">
+                      <div className="block px-0 py-2 text-gray-600">
                         {email}
                       </div>
                       <Link
                         to="/api/booked"
-                        className="block px-4 py-2 hover:bg-gray-100"
+                        className="block px-0 py-2 hover:bg-gray-100"
                         onClick={() => setShowDropdown(false)}
                       >
                         Your Profile
@@ -221,8 +244,8 @@ const Navbar = () => {
                 </li>
                 <li>
                   <Link to="/register">
-                    <button className="bg-teal-600 p-2 rounded-2xl">
-                      Sign up
+                    <button className="bg-teal-600 p-2 text-white rounded">
+                      Register
                     </button>
                   </Link>
                 </li>
@@ -232,16 +255,58 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {searchResults.length > 0 && (
-        <div className="bg-white ml-[750px] mr-[500px] mt-2 rounded-md">
-          <ul>
-            {searchResults.map((place) => (
-              <li
-                key={place?._id}
-                className="p-2 border hover:bg-gray-100 cursor-pointer"
-                onClick={() => handlePlaceSelect(place)}
+      {isMenuOpen && (
+        <div
+          id="mobile-menu"
+          className="absolute top-0 left-0 right-0 bg-white p-5 shadow-lg z-10"
+        >
+          <ul className="space-y-4 text-xl">
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/about">About us</Link>
+            </li>
+            <li>
+              <Link to="/contact">Contact</Link>
+            </li>
+            <li>
+              <Link to="/api/booked">Booked</Link>
+            </li>
+            <li>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search for a place"
+                className="border border-gray-300 rounded p-2"
+              />
+            </li>
+            <li>
+              <button
+                onClick={() =>
+                  handleSearchChange({ target: { value: searchQuery } })
+                }
+                className="bg-teal-600 text-white rounded p-2"
+                disabled={!searchQuery}
               >
-                {place?.name}
+                Search
+              </button>
+            </li>
+          </ul>
+        </div>
+      )}
+
+      {searchResults.length > 0 && (
+        <div className="absolute bg-white shadow-lg border border-gray-300 rounded-md mt-1 w-full max-w-md ml-[650px]">
+          <ul>
+            {searchResults.map((place, index) => (
+              <li
+                key={place.id || index} // Use `index` as a fallback if `place.id` is missing
+                onClick={() => handlePlaceSelect(place)}
+                className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {place.name}
               </li>
             ))}
           </ul>

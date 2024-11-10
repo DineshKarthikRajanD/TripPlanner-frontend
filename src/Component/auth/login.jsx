@@ -55,18 +55,21 @@ const Login = () => {
   };
 
   return (
-    <div className="flex">
-      <AuthSidebar />
-      <div className="flex justify-center items-center h-screen bg-white ml-48">
+    <div className="flex flex-col md:flex-row h-screen">
+      <AuthSidebar className="hidden md:block w-full md:w-1/4" />
+      <div className="flex flex-1 justify-center items-center bg-white p-4 md:p-0">
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-8 rounded-lg w-[450px]"
+          className="bg-white p-6 rounded-lg w-full max-w-md md:w-[450px]"
         >
           <h2 className="text-2xl font-bold text-center mb-3">
             Sign in to your account
           </h2>
-          <p className="ml-[100px] text-sm">
-            Don't have an account <Link to="/register">register</Link>
+          <p className="text-sm text-center mb-3">
+            Don't have an account?{" "}
+            <Link to="/register" className="text-blue-600">
+              Register
+            </Link>
           </p>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           <input
@@ -75,7 +78,7 @@ const Login = () => {
             placeholder="Email"
             onChange={handleChange}
             required
-            className="w-full p-2 mb-4 mt-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-400"
+            className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-400"
           />
           <input
             type="password"

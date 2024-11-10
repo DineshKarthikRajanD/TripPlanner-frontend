@@ -56,24 +56,28 @@ const BookedPackagesContainer = ({ onReviewSubmit }) => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="px-4 py-8 md:w-full">
       <h1 className="text-3xl font-bold text-center mb-6">Booked Packages</h1>
       {bookedPackages.length === 0 ? (
         <p className="text-center text-gray-600">No booked packages found.</p>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-32 md:w-full md:ml-auto md:justify-center">
           {bookedPackages.map((pkg, index) => (
             <div
               key={pkg.customer._id || `package-${index}`}
-              className="border rounded-lg shadow-lg p-6 bg-white transform transition-all duration-300 hover:scale-105"
+              className="border rounded-lg shadow-lg p-6 bg-white transform transition-all duration-300 hover:scale-105 md:w-[400px]"
             >
-              <h2 className="text-xl font-semibold">{pkg.packageDetails.title}</h2>
+              <h2 className="text-xl font-semibold">
+                {pkg.packageDetails.title}
+              </h2>
               <img
                 src={pkg.packageDetails.imageUrl}
                 alt={pkg.packageDetails.title}
                 className="mt-4 rounded-lg w-full h-56 object-cover"
               />
-              <p className="text-gray-700 mt-2">{pkg.packageDetails.description}</p>
+              <p className="text-gray-700 mt-2">
+                {pkg.packageDetails.description}
+              </p>
               <p className="mt-2">
                 <strong>Location:</strong> {pkg.packageDetails.place}
               </p>

@@ -66,31 +66,34 @@ const Register = () => {
         "https://tripplanner-1.onrender.com/api/auth/register",
         formData
       );
-      toast.success(res.data.message);  // Display success toast
-      setTimeout(() => navigate("/login"), 2000);  // Redirect after 2 seconds
+      toast.success(res.data.message); // Display success toast
+      setTimeout(() => navigate("/login"), 2000); // Redirect after 2 seconds
     } catch (err) {
       console.error(err.response?.data?.message);
-      toast.error(err.response?.data?.message || "Error during registration");  // Display error toast
+      toast.error(err.response?.data?.message || "Error during registration"); // Display error toast
     }
   };
 
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row min-h-screen">
       <AuthSidebar />
-      <div className="flex justify-center items-center h-screen bg-white ml-56">
+      <div className="flex flex-col justify-center items-center h-full w-full md:w-1/2 p-4 md:p-8 bg-white md:pt-36">
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-8 rounded-lg w-[450px]"
+          className="bg-white w-full max-w-md p-6 rounded-lg"
         >
-          <h2 className="text-3xl font-bold text-center mb-3">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">
             Create new account
           </h2>
-          <p className="ml-[100px] text-sm">
-            Already have an account? <Link to="/login">Login</Link>
+          <p className="text-center text-sm mb-4">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500 hover:underline">
+              Login
+            </Link>
           </p>
 
           {Object.keys(formData).map((key) => (
-            <div key={key} className="mb-4 mt-2">
+            <div key={key} className="mb-4">
               <input
                 type={key === "password" ? "password" : "text"}
                 name={key}
@@ -102,7 +105,7 @@ const Register = () => {
                 } rounded focus:outline-none focus:ring focus:ring-blue-400`}
               />
               {errors[key] && (
-                <p className="text-red-500 text-sm">{errors[key]}</p>
+                <p className="text-red-500 text-sm mt-1">{errors[key]}</p>
               )}
             </div>
           ))}

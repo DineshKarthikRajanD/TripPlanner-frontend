@@ -53,8 +53,8 @@ const ReviewList = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg">
-      <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">
+    <div className="max-w-6xl mx-auto p-4 md:p-6 bg-white rounded-lg">
+      <h2 className="text-xl md:text-2xl font-semibold mb-4 text-center text-gray-800">
         Reviews
       </h2>
 
@@ -62,10 +62,10 @@ const ReviewList = () => {
         <p className="text-center">No reviews yet.</p>
       ) : (
         <div className="relative">
-          {/* Left arrow button */}
+          {/* Left arrow button - hidden on small screens */}
           <button
             onClick={() => scrollCarousel("left")}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white text-black p-2 rounded-full hover:bg-gray-50 focus:outline-none"
+            className="hidden md:block absolute left-0 top-1/2 transform -translate-y-1/2 bg-white text-black p-2 rounded-full hover:bg-gray-50 focus:outline-none shadow-lg"
           >
             &lt;
           </button>
@@ -78,32 +78,34 @@ const ReviewList = () => {
             {reviews.map((review) => (
               <div
                 key={review._id}
-                className="flex-shrink-0 flex items-start p-4 border border-gray-300 rounded-lg shadow-md w-64 bg-gray-50"
+                className="flex-shrink-0 flex items-start p-4 border border-gray-300 rounded-lg shadow-md w-56 sm:w-64 bg-gray-50"
               >
                 <img
                   src={staticProfilePic}
                   alt="Profile"
-                  className="w-12 h-12 rounded-full mr-4"
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full mr-3 sm:mr-4"
                 />
                 <div className="flex-1">
                   <div className="flex justify-between">
-                    <span className="text-lg font-semibold">
+                    <span className="text-base sm:text-lg font-semibold">
                       {review.userId}
                     </span>
                     <span className="text-yellow-500">
                       {"★".repeat(review.rating)}
                     </span>
                   </div>
-                  <p className="mt-2 text-gray-700">{review.comment}</p>
+                  <p className="mt-2 text-sm sm:text-base text-gray-700">
+                    {review.comment}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Right arrow button */}
+          {/* Right arrow button - hidden on small screens */}
           <button
             onClick={() => scrollCarousel("right")}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white text-black p-2 rounded-full hover:bg-gray-50 focus:outline-none"
+            className="hidden md:block absolute right-0 top-1/2 transform -translate-y-1/2 bg-white text-black p-2 rounded-full hover:bg-gray-50 focus:outline-none shadow-lg"
           >
             &gt;
           </button>

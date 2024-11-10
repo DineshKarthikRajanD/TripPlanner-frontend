@@ -87,10 +87,6 @@ function Form() {
       navigate("/booked-packages"); // Redirect to booked packages page
     } catch (error) {
       console.error("Error occurred:", error.response || error);
-      toast.error(
-        "An error occurred while submitting the form: " +
-          (error.response?.data?.message || error.message)
-      );
     }
   };
 
@@ -110,7 +106,7 @@ function Form() {
       handler: async function (response) {
         alert(`Payment successful: ${response.razorpay_payment_id}`);
         await storePaymentDetails(response.razorpay_payment_id); // Store payment details
-        await handleSubmit(); // Call submit function after successful payment
+        await handleSubmit();
       },
       prefill: {
         name: localStorage.getItem("name"),
@@ -132,7 +128,7 @@ function Form() {
   return (
     <div className="flex flex-col lg:flex-row lg:space-x-8 px-4 py-8">
       {/* Package Details Section */}
-      <div className="bg-white rounded-lg shadow-xl p-6 flex-1 mr-20 hover:shadow-2xl transition duration-300 text-center">
+      <div className="bg-white rounded-lg w-full p-6 flex-1 mr-20 hover:shadow-2xl transition duration-300 text-center mb-8 lg:mb-0">
         <h2 className="text-4xl mb-4 text-center text-black font-bold">
           Package Details
         </h2>
@@ -184,8 +180,8 @@ function Form() {
       </div>
 
       {/* Booking Form Section */}
-      <div className="">
-        <div className="bg-gradient-to-br from-blue-200 to-blue-500 shadow-2xl rounded-lg p-6 w-[400px] flex-1 mt-8 mb-72 hover:shadow-2xl transition duration-300">
+      <div className="w-full lg:w-[400px]">
+        <div className="bg-gradient-to-br from-blue-200 to-blue-500 shadow-2xl rounded-lg p-6 w-full flex-1 mt-8 mb-72 hover:shadow-2xl transition duration-300">
           <h2 className="text-2xl mb-4 text-center text-blue-900 font-bold">
             Booking Form
           </h2>
@@ -241,17 +237,17 @@ function Form() {
                 readOnly
               />
             </div>
-            <button
-              type="button"
-              onClick={handlePayment}
-              className="bg-gradient-to-r from-green-500 to-teal-600 text-white font-semibold py-2 px-6 rounded-lg mt-4 inline-block shadow-lg transform transition-transform duration-200 hover:from-teal-600 hover:to-green-500 hover:-translate-y-1 w-full"
-            >
-              Pay Now
-            </button>
+            <div className="flex justify-center">
+              <button
+                onClick={handlePayment}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full transition duration-300"
+              >
+                Pay Now
+              </button>
+            </div>
           </form>
         </div>
       </div>
-
       <ToastContainer />
     </div>
   );

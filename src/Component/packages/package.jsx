@@ -19,7 +19,7 @@ const Package = () => {
         );
         if (response.status === 404) {
           setError(`No packages found for ${id}.`);
-          setPackages([]); // Reset packages in case of 404
+          setPackages([]);
           return;
         }
         if (!response.ok) {
@@ -42,14 +42,16 @@ const Package = () => {
   if (packages.length === 0) return <div>No packages found for {id}.</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4 text-center">Packages in {id}</h1>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+        Packages in {id}
+      </h1>
 
       {placeImages[id.toLowerCase()] && (
         <img
           src={placeImages[id.toLowerCase()]}
           alt={`${id} view`}
-          className="w-full h-48 object-cover rounded-lg my-4"
+          className="w-full h-40 sm:h-48 md:h-60 lg:h-72 object-cover rounded-lg mb-8"
         />
       )}
 
@@ -57,15 +59,15 @@ const Package = () => {
         {packages.map((packageData, index) => {
           const { title, price, duration, imageUrl, features } = packageData;
           return (
-            <div key={index} className="w-full sm:w-1/2 lg:w-1/3 p-2">
-              <div className="border rounded-lg p-4 bg-white shadow-md">
-                <h2 className="text-xl font-semibold">{title}</h2>
+            <div key={index} className="w-full sm:w-1/2 lg:w-1/3 p-2 flex">
+              <div className="border rounded-lg p-4 bg-white shadow-md flex flex-col w-full">
+                <h2 className="text-lg md:text-xl font-semibold">{title}</h2>
                 <img
                   src={imageUrl}
                   alt={title}
-                  className="w-full h-48 object-cover rounded-lg my-2"
+                  className="w-full h-40 sm:h-48 md:h-56 lg:h-64 object-cover rounded-lg my-2"
                 />
-                <h3 className="text-lg">
+                <h3 className="text-md md:text-lg mb-2">
                   ₹{price} per person ({duration})
                 </h3>
                 <Link
@@ -77,7 +79,7 @@ const Package = () => {
                     features,
                     imageUrl,
                   }}
-                  className="bg-gradient-to-r from-blue-600 to-purple-700 text-white font-semibold py-2 px-6 rounded-lg mt-4 inline-block shadow-lg transform transition-transform duration-200 hover:from-purple-700 hover:to-blue-600 hover:-translate-y-1"
+                  className="bg-gradient-to-r from-blue-600 to-purple-700 text-white font-semibold py-2 px-4 md:px-6 rounded-lg mt-auto text-center inline-block shadow-lg transform transition-transform duration-200 hover:from-purple-700 hover:to-blue-600 hover:-translate-y-1"
                 >
                   About this package
                 </Link>
@@ -87,16 +89,19 @@ const Package = () => {
         })}
       </div>
 
-      <div className="my-8">
-        <h2 className="text-2xl text-center font-bold mb-3">Explore {id}</h2>
+      <div className="my-12">
+        <h2 className="text-xl md:text-2xl text-center font-bold mb-4">
+          Explore {id}
+        </h2>
         <iframe
           width="100%"
-          height="600"
+          height="400"
+          className="rounded-lg"
           frameBorder="0"
           scrolling="no"
           marginHeight="0"
           marginWidth="0"
-          src={`https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${id}&t=&z=12&ie=UTF8&iwloc=B&output=embed`}
+          src={`https://maps.google.com/maps?width=100%25&height=400&hl=en&q=${id}&t=&z=12&ie=UTF8&iwloc=B&output=embed`}
           style={{ border: "none" }}
           title="Google Map"
         ></iframe>
