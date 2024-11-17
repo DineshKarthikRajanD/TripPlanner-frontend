@@ -63,7 +63,7 @@ const Navbar = () => {
         // Log email to debug
         console.log("Sending email query:", userEmail);
 
-        const response = await axios.get("http://localhost:5000/get/upload", {
+        const response = await axios.get("https://tripplanner-1.onrender.com/get/upload", {
           params: { email: userEmail }, // Pass email as query parameter
         });
 
@@ -71,7 +71,7 @@ const Navbar = () => {
         console.log("Profile data response:", response.data);
 
         const { image, email } = response.data;
-        const fullImageUrl = `http://localhost:5000${image}`; // Ensure URL is correct
+        const fullImageUrl = `https://tripplanner-1.onrender.com${image}`; // Ensure URL is correct
         setProfileImage(fullImageUrl);
         setProfileEmail(email);
       } catch (err) {
@@ -135,6 +135,7 @@ const Navbar = () => {
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
+      console.log("Recognized text:", transcript);
       const detectedLocation = allowedLocations.find((location) =>
         transcript.toLowerCase().includes(location.toLowerCase())
       );

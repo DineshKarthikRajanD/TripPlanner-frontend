@@ -15,7 +15,7 @@ function Upload() {
     formData.append("email", storedData);
 
     axios
-      .post("http://localhost:5000/upload", formData)
+      .post("https://tripplanner-1.onrender.com/upload", formData)
       .then((res) => {
         setUploadStatus("File uploaded successfully!");
         console.log(res.data);

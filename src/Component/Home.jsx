@@ -2,10 +2,6 @@ import { Link } from "react-router-dom";
 import ReviewList from "./review/dispreview";
 
 export default function Home() {
-  const storedData = localStorage.getItem("useremail");
-
-  console.log("from home page", storedData);
-
   return (
     <>
       <section className="flex flex-col md:flex-row items-center p-5 md:p-10">

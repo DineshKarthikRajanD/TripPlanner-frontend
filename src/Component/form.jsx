@@ -40,7 +40,7 @@ function Form() {
   const storePaymentDetails = async (paymentId) => {
     const name = localStorage.getItem("name");
     try {
-      const response = await axios.post("http://localhost:5000/payment", {
+      const response = await axios.post("https://tripplanner-1.onrender.com/payment", {
         name,
         mobile,
         email,
@@ -75,7 +75,7 @@ function Form() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/customer",
+        "https://tripplanner-1.onrender.com/customer",
         customerData
       );
       toast.success(`Thanks for Booking ${customerData.name}`);
