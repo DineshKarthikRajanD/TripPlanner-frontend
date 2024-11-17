@@ -5,13 +5,13 @@ const Footer = () => {
     <footer className="bg-gray-900 text-white py-8">
       <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
         {/* Logo Section */}
-        <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left space-y-2 md:space-y-0 mb-4 md:mb-0">
+        <div className="flex flex-col md:flex-row items-center md:items-center text-center md:text-left space-y-2 md:space-y-0 mb-4 md:mb-0">
           <img
             className="w-12 h-12 md:w-16 md:h-16 mr-0 md:mr-4 rounded-full"
             src="https://img.freepik.com/free-vector/detailed-travel-logo_23-2148616611.jpg"
             alt="Logo"
           />
-          <h1 className="text-xl md:text-2xl font-bold">TRAVIGO</h1>
+          <h1 className="text-xl md:text-2xl font-bold">TripVerse</h1>
         </div>
 
         {/* Quick Links */}

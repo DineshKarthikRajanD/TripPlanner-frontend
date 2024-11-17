@@ -8,6 +8,8 @@ const Navbar = () => {
     () => !!localStorage.getItem("authToken")
   );
   const [email, setEmail] = useState(localStorage.getItem("email") || "");
+  const [profileEmail, setProfileEmail] = useState("");
+  const [profileImage, setProfileImage] = useState("");
   const [username, setUsername] = useState(localStorage.getItem("name") || "");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -16,6 +18,9 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const storedData = localStorage.getItem("useremail");
+
+  console.log("from upload page", storedData);
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -43,6 +48,38 @@ const Navbar = () => {
       }
     };
     fetchPlaces();
+  }, []);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const userEmail = storedData; // Use dynamic email if available
+
+        if (!userEmail) {
+          console.error("No email provided for profile fetching");
+          return;
+        }
+
+        // Log email to debug
+        console.log("Sending email query:", userEmail);
+
+        const response = await axios.get("http://localhost:5000/get/upload", {
+          params: { email: userEmail }, // Pass email as query parameter
+        });
+
+        // Log response for debugging
+        console.log("Profile data response:", response.data);
+
+        const { image, email } = response.data;
+        const fullImageUrl = `http://localhost:5000${image}`; // Ensure URL is correct
+        setProfileImage(fullImageUrl);
+        setProfileEmail(email);
+      } catch (err) {
+        console.error("Error fetching profile data:", err.message);
+      }
+    };
+
+    fetchProfile();
   }, []);
 
   const handleLogout = () => {
@@ -141,7 +178,7 @@ const Navbar = () => {
             alt=""
             className="h-14 w-14 rounded-full md:ml-16"
           />
-          <h1 className="md:ml-4 text-3xl font-bold">Travigo</h1>
+          <h1 className="md:ml-4 text-3xl font-bold">TripVerse</h1>
         </div>
 
         <div className="lg:hidden flex items-center">
@@ -169,6 +206,20 @@ const Navbar = () => {
               <Link to="/api/booked">Booked</Link>
             </li>
           </ul>
+
+          {/* <div>
+            <h2>Profile</h2>
+            {profileImage ? (
+              <img
+                src={profileImage}
+                alt="Profile"
+                style={{ width: "200px", height: "200px", objectFit: "cover" }}
+              />
+            ) : (
+              <p>Loading image...</p>
+            )}
+            {profileEmail && <p>Email: {profileEmail}</p>}
+          </div> */}
 
           {location.pathname !== "/form" && (
             <>
@@ -211,7 +262,20 @@ const Navbar = () => {
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-green-500 mt-2 text-2xl"
                     title="Account options"
                   >
-                    {username.charAt(0)}
+                    {profileImage ? (
+                      <img
+                        src={profileImage}
+                        alt="Profile"
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          objectFit: "cover",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    ) : (
+                      username.charAt(0)
+                    )}
                   </button>
                   {showDropdown && (
                     <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
@@ -302,7 +366,7 @@ const Navbar = () => {
           <ul>
             {searchResults.map((place, index) => (
               <li
-                key={place.id || index} // Use `index` as a fallback if `place.id` is missing
+                key={place.id || index}
                 onClick={() => handlePlaceSelect(place)}
                 className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
               >

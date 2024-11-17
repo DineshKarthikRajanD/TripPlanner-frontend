@@ -14,6 +14,7 @@ function Form() {
   const [imageUrl, setImageUrl] = useState("");
   const [amount, setAmount] = useState(0);
   const [count, setCount] = useState(1);
+  const [date, setDate] = useState(""); // New state for date
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function Form() {
     if (title) setPackageTitle(title);
     if (price) {
       setPrice(price);
-      setAmount(price); // Set amount based on package price
+      setAmount(price);
     }
     if (duration) setDuration(duration);
     if (features) setFeatures(features);
@@ -31,23 +32,23 @@ function Form() {
   }, [location]);
 
   useEffect(() => {
-    setAmount(price * count); // Update amount based on count
+    setAmount(price * count);
   }, [count, price]);
+
+  const today = new Date().toISOString().split("T")[0];
 
   const storePaymentDetails = async (paymentId) => {
     const name = localStorage.getItem("name");
     try {
-      const response = await axios.post(
-        "https://tripplanner-1.onrender.com/payment",
-        {
-          name,
-          mobile,
-          email,
-          packageTitle,
-          paymentId,
-          amount,
-        }
-      );
+      const response = await axios.post("http://localhost:5000/payment", {
+        name,
+        mobile,
+        email,
+        packageTitle,
+        paymentId,
+        amount,
+        date, // Include date in payment details
+      });
       console.log("Payment details stored:", response.data);
       toast.success("Payment details stored successfully!");
     } catch (error) {
@@ -67,13 +68,14 @@ function Form() {
       packageTitle,
       count,
       amount,
+      date, // Include date in customer data
     };
 
     console.log("Sending customer data:", customerData);
 
     try {
       const response = await axios.post(
-        "https://tripplanner-1.onrender.com/customer",
+        "http://localhost:5000/customer",
         customerData
       );
       toast.success(`Thanks for Booking ${customerData.name}`);
@@ -83,15 +85,16 @@ function Form() {
       setEmail("");
       setCount(1);
       setAmount(price);
+      setDate(""); // Clear date after submission
 
-      navigate("/booked-packages"); // Redirect to booked packages page
+      navigate("/booked-packages");
     } catch (error) {
       console.error("Error occurred:", error.response || error);
     }
   };
 
   const handlePayment = (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     if (!amount || isNaN(amount) || amount <= 0) {
       alert("Please enter a valid amount");
       return;
@@ -227,24 +230,24 @@ function Form() {
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 font-semibold mb-2">
-                Total Amount
+                Date
               </label>
               <input
-                type="text"
+                type="date"
                 className="border-2 border-gray-400 p-2 rounded-lg w-full focus:outline-none focus:border-blue-500 hover:border-gray-600 transition duration-300"
-                name="amount"
-                value={`₹ ${amount}`}
-                readOnly
+                name="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                min={today} // Disables past dates
+                required
               />
             </div>
-            <div className="flex justify-center">
-              <button
-                onClick={handlePayment}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full transition duration-300"
-              >
-                Pay Now
-              </button>
-            </div>
+            <button
+              onClick={handlePayment}
+              className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            >
+              Make Payment
+            </button>
           </form>
         </div>
       </div>

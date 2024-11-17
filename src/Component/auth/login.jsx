@@ -23,11 +23,13 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        "https://tripplanner-1.onrender.com/api/auth/login",
+        "http://localhost:5000/api/auth/login",
         formData
       );
-      if (res.data?.token && res.data?.name) {
+
+      if (res.data?.token) {
         localStorage.setItem("authToken", res.data.token);
+        localStorage.setItem("useremail", res.data.useremail);
         localStorage.setItem("name", res.data.name);
 
         if (

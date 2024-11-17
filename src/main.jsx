@@ -20,6 +20,7 @@ import PaymentDetails from "./Component/paymentdetails";
 import PackageDetails from "./Component/packagedetails";
 import EditPackage from "./Component/editpack";
 import AddPackage from "./Component/addpack";
+import Upload from "./Component/upload";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -48,6 +49,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           />
           <Route path="/api/booked" element={<BookedPackagesContainer />} />
           <Route path="/review" element={<ReviewForm />} />
+          <Route path="/upload" element={<Upload />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
         </Route>
