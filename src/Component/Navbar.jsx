@@ -13,7 +13,7 @@ const Navbar = () => {
   const [username, setUsername] = useState(localStorage.getItem("name") || "");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [allPlaces, setAllPlaces] = useState([]);
+  const [allPlaces, setAllPlaces] = useState([]); // To store the complete list of places
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -251,7 +251,6 @@ const Navbar = () => {
             </>
           )}
         </div>
-
         <div>
           <ul className="flex gap-5 mr-1 font-medium">
             {isLoggedIn ? (
