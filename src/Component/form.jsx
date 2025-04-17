@@ -94,39 +94,46 @@ function Form() {
   };
 
   const handlePayment = (e) => {
-    e.preventDefault();
-    if (!amount || isNaN(amount) || amount <= 0) {
-      alert("Please enter a valid amount");
-      return;
-    }
+  e.preventDefault();
+  
+  if (!amount || isNaN(amount) || amount <= 0) {
+    alert("Please enter a valid amount");
+    return;
+  }
 
-    const options = {
-      key: "rzp_test_4rdgre6savrrmw",
-      amount: amount * 100, // Convert to paise
-      currency: "INR",
-      name: "STARTUP_PROJECTS",
-      description: "For testing purpose",
-      handler: async function (response) {
-        alert(`Payment successful: ${response.razorpay_payment_id}`);
-        await storePaymentDetails(response.razorpay_payment_id); // Store payment details
-        await handleSubmit();
-      },
-      prefill: {
-        name: localStorage.getItem("name"),
-        email: email,
-        contact: mobile,
-      },
-      notes: {
-        address: "Razorpay Corporate office",
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-
-    const pay = new window.Razorpay(options);
-    pay.open();
+  const options = {
+    key: "rzp_test_4rdgre6savrrmw",
+    amount: amount * 100, // Convert to paise
+    currency: "INR",
+    name: "STARTUP_PROJECTS",
+    description: "For testing purpose",
+    handler: async function (response) {
+      alert(`Payment successful: ${response.razorpay_payment_id}`);
+      await storePaymentDetails(response.razorpay_payment_id); // Store payment details
+      await handleSubmit();
+    },
+    prefill: {
+      name: localStorage.getItem("name"),
+      email: email,
+      contact: mobile,
+    },
+    notes: {
+      address: "Razorpay Corporate office",
+    },
+    theme: {
+      color: "#3399cc",
+    },
+    method: {
+      upi: true,         // Enable UPI (GPay, PhonePe, etc.)
+      card: true,        // Enable card payments
+      netbanking: true,  // Enable netbanking
+      wallet: true,      // Enable wallets (like Paytm)
+    },
   };
+
+  const pay = new window.Razorpay(options);
+  pay.open();
+};
 
   return (
     <div className="flex flex-col lg:flex-row lg:space-x-8 px-4 py-8">
